@@ -1,5 +1,8 @@
 using Backend.Data;
+using Backend.DTOs;
+using Backend.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace Backend.Controllers;
 
@@ -7,21 +10,68 @@ namespace Backend.Controllers;
 [Route("api/employees")]
 public class EmployeesController : ControllerBase
 {
-    private readonly AppDbContext _context;
+    private readonly IEmployeeService _service;
 
-    public EmployeesController(AppDbContext context)
+    public EmployeesController(IEmployeeService service)
     {
-        _context = context;
+        _service = service;
     }
 
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> GetPaged([FromQuery] EmployeePagedRequestDto request)
     {
-        var canConnect = _context.Database.CanConnect();
+        var result = await _service.GetPagedAsync(request);
 
-        return Ok(new
-        {
-            success = canConnect
-        });
+        return Ok(result);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var employee =
+            await _service.GetByIdAsync(id);
+
+        if (employee == null)
+            return NotFound();
+
+        return Ok(employee);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(EmployeeCreateDto dto)
+    {
+        var employee =
+            await _service.CreateAsync(dto);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { id = employee.IdEmployee },
+            employee);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(
+        int id,
+        EmployeeUpdateDto dto)
+    {
+        var updated =
+            await _service.UpdateAsync(id, dto);
+
+        if (!updated)
+            return NotFound();
+
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var deleted =
+            await _service.SoftDeleteAsync(id);
+
+        if (!deleted)
+            return NotFound();
+
+        return NoContent();
     }
 }
