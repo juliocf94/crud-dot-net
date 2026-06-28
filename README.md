@@ -1,1 +1,1 @@
-Mono repository for CRUD-dot-NET
+Mono repositorio para CRUD-dot-NET

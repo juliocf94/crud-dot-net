@@ -1,4 +1,3 @@
-using Backend.Data;
 using Backend.DTOs;
 using Backend.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -49,9 +48,7 @@ public class EmployeesController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> Update(
-        int id,
-        EmployeeUpdateDto dto)
+    public async Task<IActionResult> Update(int id, EmployeeUpdateDto dto)
     {
         var updated = await _service.UpdateAsync(id, dto);
 
