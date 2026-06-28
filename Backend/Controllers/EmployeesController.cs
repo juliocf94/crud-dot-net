@@ -53,11 +53,9 @@ public class EmployeesController : ControllerBase
         int id,
         EmployeeUpdateDto dto)
     {
-        var updated =
-            await _service.UpdateAsync(id, dto);
+        var updated = await _service.UpdateAsync(id, dto);
 
-        if (!updated)
-            return NotFound();
+        if (!updated) return NotFound();
 
         return NoContent();
     }
