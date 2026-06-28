@@ -15,8 +15,7 @@ public class EmployeeService : IEmployeeService
         _context = context;
     }
 
-    public async Task<object> GetPagedAsync(
-        EmployeePagedRequestDto request)
+    public async Task<object> GetPagedAsync(EmployeePagedRequestDto request)
     {
         var query = _context.Employees
             .Where(x => x.StatusEmployee == 'A')
@@ -73,8 +72,7 @@ public class EmployeeService : IEmployeeService
             .FirstOrDefaultAsync();
     }
 
-    public async Task<EmployeeResponseDto> CreateAsync(
-        EmployeeCreateDto dto)
+    public async Task<EmployeeResponseDto> CreateAsync(EmployeeCreateDto dto)
     {
         var employee = new Employee
         {
@@ -98,9 +96,7 @@ public class EmployeeService : IEmployeeService
         };
     }
 
-    public async Task<bool> UpdateAsync(
-        int id,
-        EmployeeUpdateDto dto)
+    public async Task<bool> UpdateAsync(int id, EmployeeUpdateDto dto)
     {
         var employee =
             await _context.Employees.FindAsync(id);
@@ -119,8 +115,7 @@ public class EmployeeService : IEmployeeService
 
     public async Task<bool> SoftDeleteAsync(int id)
     {
-        var employee =
-            await _context.Employees.FindAsync(id);
+        var employee = await _context.Employees.FindAsync(id);
 
         if (employee == null)
             return false;
@@ -131,6 +126,5 @@ public class EmployeeService : IEmployeeService
 
         return true;
     }
-
 
 }

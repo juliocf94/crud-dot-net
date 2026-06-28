@@ -3,7 +3,6 @@ using Backend.DTOs;
 using Backend.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace Backend.Controllers;
 
 [ApiController]
