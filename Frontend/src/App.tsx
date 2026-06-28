@@ -1,26 +1,90 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useState } from "react";
+import EmployeeTable from "./components/atoms/EmployeeTable";
+import { useEmployees } from "./hooks/useEmployees";
 
 function App() {
-  const [data, setData] = useState([]);
 
-  useEffect(() => {
-    async function loadClientes() {
-      const res = await fetch("http://localhost:5171/api/employees");
-      const json = await res.json();
-      setData(json);
-    }
+  const [page, setPage] = useState(1);
 
-    loadClientes();
-  }, []);
+  const [pageSize, setPageSize] = useState(10);
 
-  console.log(data);
+  const [search, setSearch] = useState("");
+
+  const { result, loading } = useEmployees(
+    page,
+    pageSize,
+    search
+  );
+
+  const totalPages = Math.ceil(
+    result.total / pageSize
+  );
 
   return (
+
     <>
 
+      <input
+        placeholder="Buscar..."
+        value={search}
+        onChange={(e) => {
+
+          setSearch(e.target.value);
+          setPage(1);
+
+        }}
+      />
+
+      {
+        loading
+          ? <p>Cargando...</p>
+          : <EmployeeTable data={result.data} />
+      }
+
+      <br />
+
+      <button
+        disabled={page === 1}
+        onClick={() => setPage(p => p - 1)}
+      >
+        Anterior
+      </button>
+
+      <span>
+
+        Página {page} de {totalPages}
+
+      </span>
+
+      <button
+        disabled={page === totalPages}
+        onClick={() => setPage(p => p + 1)}
+      >
+        Siguiente
+      </button>
+
+      <select
+        value={pageSize}
+        onChange={(e) => {
+
+          setPageSize(Number(e.target.value));
+          setPage(1);
+
+        }}
+      >
+
+        <option value={10}>10</option>
+
+        <option value={20}>20</option>
+
+        <option value={50}>50</option>
+
+      </select>
+
     </>
-  )
+
+  );
+
 }
 
-export default App
+export default App;
