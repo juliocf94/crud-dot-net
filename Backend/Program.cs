@@ -35,6 +35,24 @@ builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Request: {context.Request.Method} {context.Request.Path}{context.Request.QueryString}");
+
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("EXCEPCIÓN:");
+        Console.WriteLine(ex);
+        throw;
+    }
+
+    Console.WriteLine($"Status: {context.Response.StatusCode}");
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

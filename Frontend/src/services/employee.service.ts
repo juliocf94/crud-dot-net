@@ -6,15 +6,17 @@ export async function getEmployees(
     search: string
 ): Promise<EmployeeResponse> {
 
-    const params = new URLSearchParams({
-        page: page.toString(),
-        pageSize: pageSize.toString(),
-        search
-    });
+    const params = new URLSearchParams();
 
-    const response = await fetch(
-        `http://localhost:5171/api/employees?${params}`
-    );
+    params.append("page", page.toString());
+    params.append("pageSize", pageSize.toString());
+
+    if (search.trim() !== "") {
+        params.append("search", search);
+    }
+
+    const url = `http://localhost:5171/api/employees?${params}`;
+    const response = await fetch(url);
 
     if (!response.ok) {
         throw new Error("Error al obtener empleados");

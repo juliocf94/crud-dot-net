@@ -18,6 +18,7 @@ public class EmployeesController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetPaged([FromQuery] EmployeePagedRequestDto request)
     {
+        Console.WriteLine($"Search: '{request.Search}'");
         var result = await _service.GetPagedAsync(request);
 
         return Ok(result);
