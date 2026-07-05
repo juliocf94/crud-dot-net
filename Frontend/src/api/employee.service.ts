@@ -1,6 +1,8 @@
 import type { EmployeeResponse } from "@typings/employee";
+import { EMPLOYEE_ENDPOINTS } from '@constants/endpoints';
 import { http } from '@lib/http';
 
+const { BASE } = EMPLOYEE_ENDPOINTS;
 interface RequestOptions {
     signal?: AbortSignal;
 }
@@ -16,7 +18,7 @@ async function getEmployees(
     options?: RequestOptions
 ): Promise<EmployeeResponse> {
     return http.query<EmployeeResponse>(
-        '/employees',
+        BASE,
         {
             page,
             pageSize,
