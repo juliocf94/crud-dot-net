@@ -8,7 +8,7 @@ import type {
     ColumnDef
 } from "@tanstack/react-table";
 
-import type { Employee } from "../../types/employee";
+import type { Employee } from "@typings/employee";
 
 interface Props {
     data: Employee[];

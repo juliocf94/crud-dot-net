@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { employeeService } from '@api/employee.service';
+import { employeeService } from '@api';
 import { ApiError } from '@lib/http';
 import type { EmployeeResponse } from '@typings/employee';
 
