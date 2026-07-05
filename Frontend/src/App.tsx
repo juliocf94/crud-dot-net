@@ -1,45 +1,38 @@
 import { useState } from "react";
-import EmployeeTable from "@components/atoms/EmployeeTable";
+import DataTable from '@components/molecules/DataTable/DataTable';
+import { EMPLOYEE_COLUMNS } from '@constants/columns/employee.columns';
 import { useEmployees } from "@hooks/useEmployees";
 
 function App() {
 
   const [page, setPage] = useState(1);
-
   const [pageSize, setPageSize] = useState(10);
-
   const [search, setSearch] = useState("");
-
   const { result, loading } = useEmployees({
     page,
     pageSize,
     search
   });
 
-  const totalPages = Math.ceil(
-    result.total / pageSize
-  );
+  const totalPages = Math.ceil(result.total / pageSize);
 
   return (
-
     <>
-
       <input
         placeholder="Buscar..."
         value={search}
         onChange={(e) => {
-
           setSearch(e.target.value);
           setPage(1);
-
         }}
       />
 
-      {
-        loading
-          ? <p>Cargando...</p>
-          : <EmployeeTable data={result.data} />
-      }
+      <DataTable
+        data={result.data}
+        columns={EMPLOYEE_COLUMNS}
+        loading={loading}
+        emptyMessage="No hay empleados registrados"
+      />
 
       <br />
 
@@ -50,11 +43,7 @@ function App() {
         Anterior
       </button>
 
-      <span>
-
-        Página {page} de {totalPages}
-
-      </span>
+      <span>Página {page} de {totalPages}</span>
 
       <button
         disabled={page === totalPages}
@@ -72,19 +61,12 @@ function App() {
 
         }}
       >
-
         <option value={10}>10</option>
-
         <option value={20}>20</option>
-
         <option value={50}>50</option>
-
       </select>
-
     </>
-
   );
-
 }
 
 export default App;
