@@ -4,6 +4,9 @@ using Backend.Interfaces;
 using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
+using System.Data;
+using System.Data.Common;
+
 namespace Backend.Services;
 
 public class EmployeeService : IEmployeeService
@@ -15,43 +18,71 @@ public class EmployeeService : IEmployeeService
         _context = context;
     }
 
-    public async Task<object> GetPagedAsync(EmployeePagedRequestDto request)
+    public async Task<PagedResponse<EmployeeResponseDto>> GetPagedAsync(
+        EmployeePagedRequestDto request)
     {
-        var query = _context.Employees
-            .Where(x => x.StatusEmployee == 'A')
-            .AsQueryable();
+        var connection = _context.Database.GetDbConnection();
 
-        if (!string.IsNullOrWhiteSpace(request.Search))
+        var command = connection.CreateCommand();
+
+        command.CommandText = "sp_Employees_GetPaged";
+        command.CommandType = CommandType.StoredProcedure;
+
+        var pageParameter = command.CreateParameter();
+        pageParameter.ParameterName = "@Page";
+        pageParameter.Value = request.Page;
+        pageParameter.DbType = DbType.Int32;
+        command.Parameters.Add(pageParameter);
+
+        var pageSizeParameter = command.CreateParameter();
+        pageSizeParameter.ParameterName = "@PageSize";
+        pageSizeParameter.Value = request.PageSize;
+        pageSizeParameter.DbType = DbType.Int32;
+        command.Parameters.Add(pageSizeParameter);
+
+        var searchParameter = command.CreateParameter();
+        searchParameter.ParameterName = "@Search";
+        searchParameter.Value = request.Search ?? string.Empty;
+        searchParameter.DbType = DbType.String;
+        command.Parameters.Add(searchParameter);
+
+        await connection.OpenAsync();
+
+        var reader = await command.ExecuteReaderAsync();
+
+        var response = new PagedResponse<EmployeeResponseDto>
         {
-            query = query.Where(x =>
-                x.NameEmployee.Contains(request.Search) ||
-                x.LastNameEmployee.Contains(request.Search));
+            Page = request.Page,
+            PageSize = request.PageSize
+        };
+
+        if (await reader.ReadAsync())
+        {
+            response.Total = reader.GetInt32(0);
         }
 
-        var total = await query.CountAsync();
+        await reader.NextResultAsync();
 
-        var data = await query
-            .OrderBy(x => x.IdEmployee)
-            .Skip((request.Page - 1) * request.PageSize)
-            .Take(request.PageSize)
-            .Select(x => new EmployeeResponseDto
-            {
-                IdEmployee = x.IdEmployee,
-                NameEmployee = x.NameEmployee,
-                LastNameEmployee = x.LastNameEmployee,
-                Birthdate = x.Birthdate,
-                StatusEmployee = x.StatusEmployee,
-                CreateAt = x.CreateAt
-            })
-            .ToListAsync();
-
-        return new
+        while (await reader.ReadAsync())
         {
-            total,
-            request.Page,
-            request.PageSize,
-            data
-        };
+            response.Data.Add(new EmployeeResponseDto
+            {
+                IdEmployee = reader.GetInt32(0),
+                NameEmployee = reader.GetString(1),
+                LastNameEmployee = reader.GetString(2),
+                Birthdate = reader.IsDBNull(3)
+                    ? null
+                    : reader.GetDateTime(3),
+                StatusEmployee = reader.GetString(4)[0],
+                CreateAt = reader.GetDateTime(5)
+            });
+        }
+
+        await reader.DisposeAsync();
+        await command.DisposeAsync();
+        await connection.CloseAsync();
+
+        return response;
     }
 
     public async Task<EmployeeResponseDto?> GetByIdAsync(int id)

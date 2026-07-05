@@ -4,7 +4,7 @@ namespace Backend.Interfaces;
 
 public interface IEmployeeService
 {
-    Task<object> GetPagedAsync(EmployeePagedRequestDto request);
+    Task<PagedResponse<EmployeeResponseDto>> GetPagedAsync(EmployeePagedRequestDto request);
 
     Task<EmployeeResponseDto?> GetByIdAsync(int id);
 
