@@ -1,6 +1,6 @@
 import { useState } from "react";
-import EmployeeTable from "./components/atoms/EmployeeTable";
-import { useEmployees } from "./hooks/useEmployees";
+import EmployeeTable from "@components/atoms/EmployeeTable";
+import { useEmployees } from "@hooks/useEmployees";
 
 function App() {
 
@@ -10,11 +10,11 @@ function App() {
 
   const [search, setSearch] = useState("");
 
-  const { result, loading } = useEmployees(
+  const { result, loading } = useEmployees({
     page,
     pageSize,
     search
-  );
+  });
 
   const totalPages = Math.ceil(
     result.total / pageSize

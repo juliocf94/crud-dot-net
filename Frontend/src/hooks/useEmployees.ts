@@ -1,51 +1,51 @@
-import { useEffect, useState } from "react";
-import { getEmployees } from "../services/employee.service";
-import type { EmployeeResponse } from "../types/employee";
+import { useEffect, useState } from 'react';
+import { employeeService } from '@api/employee.service';
+import { ApiError } from '@lib/http';
+import type { EmployeeResponse } from '@typings/employee';
 
-export function useEmployees(
-    page: number,
-    pageSize: number,
-    search: string
-) {
+const { getEmployees } = employeeService;
 
-    const [loading, setLoading] = useState(false);
+interface UseEmployeesParams {
+  page: number;
+  pageSize: number;
+  search: string;
+}
 
-    const [result, setResult] = useState<EmployeeResponse>({
-        total: 0,
-        page: 1,
-        pageSize: 10,
-        data: []
-    });
+export function useEmployees({ page, pageSize, search }: UseEmployeesParams) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<ApiError | null>(null);
+  const [result, setResult] = useState<EmployeeResponse>({
+    total: 0,
+    page: 1,
+    pageSize: 10,
+    data: [],
+  });
 
-    useEffect(() => {
+  useEffect(() => {
+    const controller = new AbortController();
 
-        async function load() {
+    async function load() {
+      setLoading(true);
+      setError(null);
 
-            setLoading(true);
+      try {
+        const data = await getEmployees(
+          { page, pageSize, search },
+          { signal: controller.signal }
+        );
+        setResult(data);
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') return;
+        setError(err as ApiError);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    }
 
-            try {
+    load();
 
-                const data = await getEmployees(
-                    page,
-                    pageSize,
-                    search
-                );
+    return () => controller.abort();
+  }, [page, pageSize, search]);
 
-                setResult(data);
-
-            } finally {
-
-                setLoading(false);
-
-            }
-        }
-
-        load();
-
-    }, [page, pageSize, search]);
-
-    return {
-        loading,
-        result
-    };
+  return { loading, error, result };
 }

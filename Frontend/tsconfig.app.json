@@ -28,7 +28,9 @@
       "@helpers/*": ["./src/helpers/*"],
       "@contexts/*": ["./src/contexts/*"],
       "@pages/*": ["./src/pages/*"],
-      "@typings/*": ["./src/types/*"]
+      "@typings/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@assets/*": ["./src/assets/*"]
     },
 
     /* Linting */
