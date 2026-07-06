@@ -1,22 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
-
 import { employeeService } from '@api';
-
 import { ApiError } from '@lib/http';
-
 import type { EmployeeResponse } from '@typings/employee';
-
 import type {
     PaginationInfo,
-    PaginationState,
+    ServerPaginationState,
 } from '@typings/pagination';
-
 import type { EmployeeFilters } from '@typings/employee-filters';
 
 const { getEmployees } = employeeService;
 
 interface UseEmployeesParams {
-    pagination: PaginationState;
+    pagination: ServerPaginationState;
     filters: EmployeeFilters;
 }
 
@@ -32,6 +27,7 @@ export function useEmployees({
         total: 0,
         page: 1,
         pageSize: 10,
+        totalPages: 0,
         data: [],
     });
 
@@ -64,7 +60,11 @@ export function useEmployees({
         }
 
         return () => controller.abort();
-    }, [pagination, filters]);
+    }, [
+        pagination.page,
+        pagination.pageSize,
+        filters.search,
+    ]);
 
     useEffect(() => {
         load();
@@ -74,9 +74,7 @@ export function useEmployees({
         page: result.page,
         pageSize: result.pageSize,
         total: result.total,
-        totalPages:
-            result.totalPages ??
-            Math.ceil(result.total / result.pageSize),
+        totalPages: result.totalPages,
     };
 
     return {

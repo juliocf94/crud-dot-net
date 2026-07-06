@@ -1,13 +1,5 @@
-export interface PaginatedResponse<T> {
-    total: number;
-    page: number;
-    pageSize: number;
+import type { PaginationInfo } from '@typings/pagination';
 
-    /**
-     * El backend puede devolverlo en un futuro.
-     * Mientras tanto lo calcularemos en el frontend.
-     */
-    totalPages?: number;
-
+export interface PaginatedResponse<T> extends PaginationInfo {
     data: T[];
 }
