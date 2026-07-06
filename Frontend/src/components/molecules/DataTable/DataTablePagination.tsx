@@ -1,8 +1,8 @@
-import type { DataTableComponentProps } from './types';
 import { DEFAULT_PAGE_SIZES } from './defaults';
+import { useDataTableContext } from './provider/DataTableProvider';
 
-export default function DataTablePagination<TData>({ table, }: DataTableComponentProps<TData>) {
-
+export default function DataTablePagination() {
+    const { table } = useDataTableContext();
     const {
         pageIndex,
         pageSize,

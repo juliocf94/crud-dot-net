@@ -1,0 +1,107 @@
+import {
+    createContext,
+    useContext,
+    useMemo,
+    useState,
+} from 'react';
+
+import {
+    useReactTable,
+    getCoreRowModel,
+    type SortingState,
+    type VisibilityState,
+    type RowSelectionState,
+    type PaginationState,
+} from '@tanstack/react-table';
+
+import type { ServerPaginationState } from '@typings/pagination';
+
+import { toTablePagination, toServerPagination } from '../utils/pagination-adapter';
+
+interface DataTableContextValue<TData> {
+    table: ReturnType<typeof useReactTable<TData>>;
+}
+
+const DataTableContext = createContext<DataTableContextValue<any> | null>(null);
+
+export function useDataTableContext<TData>() {
+    const context = useContext(DataTableContext);
+
+    if (!context) {
+        throw new Error('useDataTableContext must be used within DataTableProvider');
+    }
+
+    return context as DataTableContextValue<TData>;
+}
+
+interface DataTableProviderProps<TData> {
+    data: TData[];
+    columns: any;
+
+    pagination: ServerPaginationState;
+    onPaginationChange: (pagination: ServerPaginationState) => void;
+
+    children: React.ReactNode;
+}
+
+export function DataTableProvider<TData>({
+    data,
+    columns,
+    pagination,
+    onPaginationChange,
+    children,
+}: DataTableProviderProps<TData>) {
+
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+    const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+    const tablePagination = useMemo<PaginationState>(() => {
+        return toTablePagination(pagination);
+    }, [pagination]);
+
+    const table = useReactTable({
+        data,
+        columns,
+
+        state: {
+            pagination: tablePagination,
+            sorting,
+            columnVisibility,
+            rowSelection,
+        },
+
+        pageCount: pagination.totalPages,
+
+        manualPagination: true,
+        manualSorting: true,
+        manualFiltering: true,
+
+        onPaginationChange: (updater) => {
+            const next =
+                typeof updater === 'function'
+                    ? updater(table.getState().pagination)
+                    : updater;
+
+            onPaginationChange(
+                toServerPagination(next)
+            );
+        },
+
+        onSortingChange: setSorting,
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
+
+        getCoreRowModel: getCoreRowModel(),
+    });
+
+    const value = useMemo(() => ({
+        table,
+    }), [table]);
+
+    return (
+        <DataTableContext.Provider value={value}>
+            {children}
+        </DataTableContext.Provider>
+    );
+}

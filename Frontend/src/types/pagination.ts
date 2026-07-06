@@ -5,6 +5,7 @@
 export interface ServerPaginationState {
     page: number;
     pageSize: number;
+    totalPages: number;
 }
 
 /**

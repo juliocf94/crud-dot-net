@@ -1,8 +1,8 @@
 import { flexRender } from '@tanstack/react-table';
+import { useDataTableContext } from './provider/DataTableProvider';
 
-import type { DataTableComponentProps } from './types';
-
-export default function DataTableBody<TData>({ table, }: DataTableComponentProps<TData>) {
+export default function DataTableBody() {
+    const { table } = useDataTableContext();
 
     return (
         <tbody>
