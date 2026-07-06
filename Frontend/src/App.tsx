@@ -8,13 +8,25 @@ function App() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState("");
-  const { result, loading } = useEmployees({
-    page,
-    pageSize,
-    search
+  const [pagination, setPagination] = useState({
+    page: 1,
+    pageSize: 10,
   });
 
-  const totalPages = Math.ceil(result.total / pageSize);
+  const [filters, setFilters] = useState({
+    search: "",
+  });
+
+  const {
+    employees,
+    loading,
+    pagination: paginationInfo,
+  } = useEmployees({
+    pagination,
+    filters,
+  });
+
+  //const totalPages = Math.ceil(result.total / pageSize);
 
   return (
     <>
@@ -28,10 +40,9 @@ function App() {
       />
 
       <DataTable
-        data={result.data}
+        data={employees}
         columns={EMPLOYEE_COLUMNS}
         loading={loading}
-        emptyMessage="No hay empleados registrados"
       />
 
       <br />

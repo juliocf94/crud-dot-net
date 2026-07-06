@@ -1,3 +1,5 @@
+import type { PaginatedResponse } from "@typings/api/paginated-response";
+
 export interface Employee {
     idEmployee: number;
     nameEmployee: string;
@@ -7,9 +9,4 @@ export interface Employee {
     createAt: string;
 }
 
-export interface EmployeeResponse {
-    total: number;
-    page: number;
-    pageSize: number;
-    data: Employee[];
-}
+export type EmployeeResponse = PaginatedResponse<Employee>;

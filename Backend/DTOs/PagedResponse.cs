@@ -8,5 +8,7 @@ public class PagedResponse<T>
 
     public int PageSize { get; set; }
 
+    public int TotalPages { get; set; }
+
     public List<T> Data { get; set; } = new();
 }

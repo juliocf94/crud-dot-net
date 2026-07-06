@@ -1,51 +1,89 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
 import { employeeService } from '@api';
+
 import { ApiError } from '@lib/http';
+
 import type { EmployeeResponse } from '@typings/employee';
+
+import type {
+    PaginationInfo,
+    PaginationState,
+} from '@typings/pagination';
+
+import type { EmployeeFilters } from '@typings/employee-filters';
 
 const { getEmployees } = employeeService;
 
 interface UseEmployeesParams {
-  page: number;
-  pageSize: number;
-  search: string;
+    pagination: PaginationState;
+    filters: EmployeeFilters;
 }
 
-export function useEmployees({ page, pageSize, search }: UseEmployeesParams) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<ApiError | null>(null);
-  const [result, setResult] = useState<EmployeeResponse>({
-    total: 0,
-    page: 1,
-    pageSize: 10,
-    data: [],
-  });
+export function useEmployees({
+    pagination,
+    filters,
+}: UseEmployeesParams) {
+    const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const controller = new AbortController();
+    const [error, setError] = useState<ApiError | null>(null);
 
-    async function load() {
-      setLoading(true);
-      setError(null);
+    const [result, setResult] = useState<EmployeeResponse>({
+        total: 0,
+        page: 1,
+        pageSize: 10,
+        data: [],
+    });
 
-      try {
-        const data = await getEmployees(
-          { page, pageSize, search },
-          { signal: controller.signal }
-        );
-        setResult(data);
-      } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') return;
-        setError(err as ApiError);
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    }
+    const load = useCallback(async () => {
+        const controller = new AbortController();
 
-    load();
+        setLoading(true);
 
-    return () => controller.abort();
-  }, [page, pageSize, search]);
+        setError(null);
 
-  return { loading, error, result };
+        try {
+            const response = await getEmployees(
+                {
+                    page: pagination.page,
+                    pageSize: pagination.pageSize,
+                    search: filters.search,
+                },
+                {
+                    signal: controller.signal,
+                }
+            );
+
+            setResult(response);
+        } catch (err) {
+            if (err instanceof DOMException && err.name === 'AbortError') return;
+
+            setError(err as ApiError);
+        } finally {
+            setLoading(false);
+        }
+
+        return () => controller.abort();
+    }, [pagination, filters]);
+
+    useEffect(() => {
+        load();
+    }, [load]);
+
+    const paginationInfo: PaginationInfo = {
+        page: result.page,
+        pageSize: result.pageSize,
+        total: result.total,
+        totalPages:
+            result.totalPages ??
+            Math.ceil(result.total / result.pageSize),
+    };
+
+    return {
+        employees: result.data,
+        pagination: paginationInfo,
+        loading,
+        error,
+        refresh: load,
+    };
 }

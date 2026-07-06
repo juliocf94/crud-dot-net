@@ -18,11 +18,9 @@ public class EmployeeService : IEmployeeService
         _context = context;
     }
 
-    public async Task<PagedResponse<EmployeeResponseDto>> GetPagedAsync(
-        EmployeePagedRequestDto request)
+    public async Task<PagedResponse<EmployeeResponseDto>> GetPagedAsync(EmployeePagedRequestDto request)
     {
         var connection = _context.Database.GetDbConnection();
-
         var command = connection.CreateCommand();
 
         command.CommandText = "sp_Employees_GetPaged";
@@ -50,15 +48,14 @@ public class EmployeeService : IEmployeeService
 
         var reader = await command.ExecuteReaderAsync();
 
-        var response = new PagedResponse<EmployeeResponseDto>
-        {
-            Page = request.Page,
-            PageSize = request.PageSize
-        };
+        var response = new PagedResponse<EmployeeResponseDto>();
 
         if (await reader.ReadAsync())
         {
-            response.Total = reader.GetInt32(0);
+            response.Total = reader.GetInt32(reader.GetOrdinal("Total"));
+            response.Page = reader.GetInt32(reader.GetOrdinal("Page"));
+            response.PageSize = reader.GetInt32(reader.GetOrdinal("PageSize"));
+            response.TotalPages = reader.GetInt32(reader.GetOrdinal("TotalPages"));
         }
 
         await reader.NextResultAsync();
@@ -70,9 +67,7 @@ public class EmployeeService : IEmployeeService
                 IdEmployee = reader.GetInt32(0),
                 NameEmployee = reader.GetString(1),
                 LastNameEmployee = reader.GetString(2),
-                Birthdate = reader.IsDBNull(3)
-                    ? null
-                    : reader.GetDateTime(3),
+                Birthdate = reader.IsDBNull(3) ? null : reader.GetDateTime(3),
                 StatusEmployee = reader.GetString(4)[0],
                 CreateAt = reader.GetDateTime(5)
             });
