@@ -2,6 +2,7 @@ using Backend.Data;
 using Microsoft.EntityFrameworkCore;
 using Backend.Interfaces;
 using Backend.Services;
+using Backend.Data.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,6 +53,15 @@ app.Use(async (context, next) =>
 
     Console.WriteLine($"Status: {context.Response.StatusCode}");
 });
+
+using(var scope = app.Services.CreateScope())
+{
+    Console.WriteLine("Migración");
+    var context = scope.ServiceProvider
+        .GetRequiredService<AppDbContext>();
+
+    SeederRunner.Seed(context);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

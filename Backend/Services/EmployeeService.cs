@@ -5,7 +5,6 @@ using Backend.Models;
 using Microsoft.EntityFrameworkCore;
 
 using System.Data;
-using System.Data.Common;
 
 namespace Backend.Services;
 
