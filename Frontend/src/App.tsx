@@ -6,12 +6,10 @@ import { toServerPagination } from '@components/molecules/DataTable/utils/pagina
 import type { ServerPaginationState } from '@typings/pagination';
 
 function App() {
-
-    const [pagination, setPagination] =
-        useState<ServerPaginationState>({
-            page: 1,
-            pageSize: 10,
-        });
+    const [pagination, setPagination] = useState<ServerPaginationState>({
+        page: 1,
+        pageSize: 10,
+    });
 
     const {
         employees,
