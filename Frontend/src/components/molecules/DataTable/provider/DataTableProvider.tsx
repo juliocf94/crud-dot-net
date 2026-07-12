@@ -14,7 +14,7 @@ import {
     type PaginationState,
 } from '@tanstack/react-table';
 
-import type { ServerPaginationState } from '@typings/pagination';
+import type { PaginationRequest } from '@typings/pagination';
 
 import { toTablePagination, toServerPagination } from '../utils/pagination-adapter';
 
@@ -38,8 +38,8 @@ interface DataTableProviderProps<TData> {
     data: TData[];
     columns: any;
 
-    pagination: ServerPaginationState;
-    onPaginationChange: (pagination: ServerPaginationState) => void;
+    pagination: PaginationRequest;
+    onPaginationChange: (pagination: PaginationRequest) => void;
 
     children: React.ReactNode;
 }

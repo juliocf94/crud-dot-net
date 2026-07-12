@@ -4,14 +4,14 @@ import DataTableHeader from './DataTableHeader';
 import DataTableBody from './DataTableBody';
 import DataTablePagination from './DataTablePagination';
 
-import type { ServerPaginationState } from '@typings/pagination';
+import type { PaginationRequest } from '@typings/pagination';
 
 interface Props<TData> {
     data: TData[];
     columns: any;
 
-    pagination: ServerPaginationState;
-    onPaginationChange: (pagination: ServerPaginationState) => void;
+    pagination: PaginationRequest;
+    onPaginationChange: (pagination: PaginationRequest) => void;
 
     toolbar?: React.ReactNode;
     footer?: React.ReactNode;

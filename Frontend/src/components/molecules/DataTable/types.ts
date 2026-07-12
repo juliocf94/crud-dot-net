@@ -4,14 +4,14 @@ import type {
     Table,
 } from '@tanstack/react-table';
 
-import type { PaginationInfo } from '@typings/pagination';
+import type { PaginationMetadata } from '@typings/pagination';
 
 export interface DataTableProps<TData> {
     data: TData[];
     columns: ColumnDef<TData>[];
     loading?: boolean;
     emptyMessage?: string;
-    pagination: PaginationInfo;
+    pagination: PaginationMetadata;
 
     /**
      * Se dispara cuando TanStack cambia

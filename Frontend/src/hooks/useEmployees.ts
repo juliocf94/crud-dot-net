@@ -3,15 +3,15 @@ import { employeeService } from '@api';
 import { ApiError } from '@lib/http';
 import type { EmployeeResponse } from '@typings/employee';
 import type {
-    PaginationInfo,
-    ServerPaginationState,
+    PaginationMetadata,
+    PaginationRequest,
 } from '@typings/pagination';
 import type { EmployeeFilters } from '@typings/employee-filters';
 
 const { getEmployees } = employeeService;
 
 interface UseEmployeesParams {
-    pagination: ServerPaginationState;
+    pagination: PaginationRequest;
     filters: EmployeeFilters;
 }
 
@@ -70,7 +70,7 @@ export function useEmployees({
         load();
     }, [load]);
 
-    const paginationInfo: PaginationInfo = {
+    const PaginationMetadata: PaginationMetadata = {
         page: result.page,
         pageSize: result.pageSize,
         total: result.total,
@@ -79,7 +79,7 @@ export function useEmployees({
 
     return {
         employees: result.data,
-        pagination: paginationInfo,
+        pagination: PaginationMetadata,
         loading,
         error,
         refresh: load,
