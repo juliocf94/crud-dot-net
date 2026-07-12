@@ -20,9 +20,7 @@ export function useEmployees({
     filters,
 }: UseEmployeesParams) {
     const [loading, setLoading] = useState(false);
-
     const [error, setError] = useState<ApiError | null>(null);
-
     const [result, setResult] = useState<EmployeeResponse>({
         total: 0,
         page: 1,

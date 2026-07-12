@@ -2,7 +2,6 @@ import { useState } from 'react';
 import DataTable from '@components/molecules/DataTable';
 import { EMPLOYEE_COLUMNS } from '@constants/columns/employee.columns';
 import { useEmployees } from '@hooks/useEmployees';
-import { toServerPagination } from '@components/molecules/DataTable/utils/pagination-adapter';
 import type { PaginationRequest } from '@typings/pagination';
 
 function App() {
@@ -31,10 +30,9 @@ function App() {
             //loading={loading}
             emptyMessage="No hay empleados."
             pagination={PaginationResponse}
-            onPaginationChange={(state) => {
-                setPagination(
-                    toServerPagination(state),
-                );
+            onPaginationChange={(pagination) => {
+                // FIX: Se debe pasar el objeto de estado de la tabla
+                setPagination(pagination);
             }}
         />
     );
