@@ -11,7 +11,7 @@ public static class EmployeeSeeder
 
         var employees = EmployeeFactory
             .Create()
-            .Generate(100000);
+            .Generate(200000);
 
         context.Employees.AddRange(employees);
 
