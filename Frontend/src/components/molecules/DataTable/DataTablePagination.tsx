@@ -7,6 +7,7 @@ export default function DataTablePagination() {
         pageIndex,
         pageSize,
     } = table.getState().pagination;
+    console.log(table.getState().pagination);
 
     return (
         <div

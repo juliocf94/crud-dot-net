@@ -9,12 +9,13 @@ function App() {
     const [pagination, setPagination] = useState<ServerPaginationState>({
         page: 1,
         pageSize: 10,
+        totalPages: 0,
     });
 
     const {
         employees,
         pagination: paginationInfo,
-        loading,
+        // loading,
     } = useEmployees({
         pagination,
         filters: {
@@ -26,7 +27,9 @@ function App() {
         <DataTable
             data={employees}
             columns={EMPLOYEE_COLUMNS}
-            loading={loading}
+
+            //loading={loading}
+
             pagination={paginationInfo}
             onPaginationChange={(state) => {
                 setPagination(

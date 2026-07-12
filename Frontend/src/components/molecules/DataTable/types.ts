@@ -7,15 +7,10 @@ import type {
 import type { PaginationInfo } from '@typings/pagination';
 
 export interface DataTableProps<TData> {
-
     data: TData[];
-
     columns: ColumnDef<TData>[];
-
     loading?: boolean;
-
     emptyMessage?: string;
-
     pagination: PaginationInfo;
 
     /**

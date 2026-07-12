@@ -22,6 +22,7 @@ export default function DataTable<TData>({
     columns,
     pagination,
     onPaginationChange,
+    
     toolbar,
     footer,
 }: Props<TData>) {
