@@ -14,7 +14,7 @@ interface UseEmployeesParams {
     pagination: PaginationRequest;
     filters: EmployeeFilters;
 }
-
+// Custom hook
 export function useEmployees({
     pagination,
     filters,

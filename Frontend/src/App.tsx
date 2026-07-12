@@ -9,18 +9,18 @@ function App() {
     const [pagination, setPagination] = useState<PaginationRequest>({
         page: 1,
         pageSize: 10,
-        totalPages: 0,
+    });
+    const [filters, setFilters] = useState({
+        search: '',
     });
 
     const {
         employees,
-        pagination: PaginationMetadata,
+        pagination: PaginationResponse,
         // loading,
     } = useEmployees({
         pagination,
-        filters: {
-            search: '',
-        },
+        filters: filters,
     });
 
     return (
@@ -30,7 +30,7 @@ function App() {
 
             //loading={loading}
             emptyMessage="No hay empleados."
-            pagination={PaginationMetadata}
+            pagination={PaginationResponse}
             onPaginationChange={(state) => {
                 setPagination(
                     toServerPagination(state),

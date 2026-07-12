@@ -19,7 +19,9 @@ export function toTablePagination(pagination: PaginationRequest,): PaginationSta
  * al formato esperado por la API.
  */
 export function toServerPagination(pagination: PaginationState,): PaginationRequest {
-
+    console.log("pagination", pagination);
+    console.log("index", pagination.pageIndex);
+    console.log("size", pagination.pageSize);
     return {
         page: pagination.pageIndex + 1,
         pageSize: pagination.pageSize,
