@@ -12,9 +12,12 @@ import {
     type VisibilityState,
     type RowSelectionState,
     type PaginationState,
+    type ColumnDef,
 } from '@tanstack/react-table';
 
-import type { PaginationRequest } from '@typings/pagination';
+import type {
+    PaginationMetadata, PaginationRequest
+} from '@typings/pagination';
 
 import { toTablePagination, toServerPagination } from '../utils/pagination-adapter';
 
@@ -36,9 +39,9 @@ export function useDataTableContext<TData>() {
 
 interface DataTableProviderProps<TData> {
     data: TData[];
-    columns: any;
+    columns: ColumnDef<TData>[];
 
-    pagination: PaginationRequest;
+    pagination: PaginationMetadata;
     onPaginationChange: (pagination: PaginationRequest) => void;
 
     children: React.ReactNode;

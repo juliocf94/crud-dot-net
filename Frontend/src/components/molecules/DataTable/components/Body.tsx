@@ -1,5 +1,5 @@
 import { flexRender } from '@tanstack/react-table';
-import { useDataTableContext } from './provider/DataTableProvider';
+import { useDataTableContext } from '../provider';
 
 interface DataTableBodyProps {
     emptyMessage?: React.ReactNode;

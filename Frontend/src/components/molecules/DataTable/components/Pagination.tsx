@@ -1,14 +1,12 @@
-import { DEFAULT_PAGE_SIZES } from './defaults';
-import { useDataTableContext } from './provider/DataTableProvider';
+import { DEFAULT_PAGE_SIZES } from '../defaults';
+import { useDataTableContext } from '../provider';
 
-export default function DataTablePagination() {
+export default function Pagination() {
     const { table } = useDataTableContext();
     const {
         pageIndex,
         pageSize,
     } = table.getState().pagination;
-    console.log("index:", pageIndex);
-    console.log("DataTablePagination", table.getState().pagination);
 
     return (
         <div

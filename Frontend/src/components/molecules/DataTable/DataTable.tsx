@@ -1,16 +1,19 @@
+import type {
+    ColumnDef
+} from '@tanstack/react-table';
 import { DataTableProvider } from './provider/DataTableProvider';
 
-import DataTableHeader from './DataTableHeader';
-import DataTableBody from './DataTableBody';
-import DataTablePagination from './DataTablePagination';
+import Header from './components/Header';
+import DataTableBody from './components/Body';
+import Pagination from './components/Pagination';
 
-import type { PaginationRequest } from '@typings/pagination';
+import type { PaginationRequest, PaginationMetadata } from '@typings/pagination';
 
 interface Props<TData> {
     data: TData[];
-    columns: any;
+    columns: ColumnDef<TData>[];
 
-    pagination: PaginationRequest;
+    pagination: PaginationMetadata;
     onPaginationChange: (pagination: PaginationRequest) => void;
 
     toolbar?: React.ReactNode;
@@ -47,12 +50,12 @@ export default function DataTable<TData>({
 
                 {/* TABLE CORE */}
                 <table>
-                    <DataTableHeader />
+                    <Header />
                     <DataTableBody emptyMessage={emptyMessage} />
                 </table>
 
                 {/* PAGINATION */}
-                <DataTablePagination />
+                <Pagination />
 
                 {/* SLOT: Footer */}
                 {footer && (
