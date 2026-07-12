@@ -5,9 +5,7 @@ interface DataTableBodyProps {
     emptyMessage?: React.ReactNode;
 }
 
-export default function DataTableBody<TBody>({
-    emptyMessage = 'No data available.',
-}: DataTableBodyProps) {
+export default function DataTableBody<TBody>({ emptyMessage = 'No data available.', }: DataTableBodyProps) {
     const { table } = useDataTableContext<TBody>();
     const rowsModel = table.getRowModel().rows;
     const hasRows = Array.isArray(rowsModel) && rowsModel.length > 0;
