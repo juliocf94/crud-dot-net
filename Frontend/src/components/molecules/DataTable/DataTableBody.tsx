@@ -1,15 +1,22 @@
 import { flexRender } from '@tanstack/react-table';
 import { useDataTableContext } from './provider/DataTableProvider';
 
-export default function DataTableBody() {
-    const { table } = useDataTableContext();
-    console.log(table.getRowModel().rows);
+interface DataTableBodyProps {
+    emptyMessage?: React.ReactNode;
+}
+
+export default function DataTableBody<TBody>({
+    emptyMessage = 'No data available.',
+}: DataTableBodyProps) {
+    const { table } = useDataTableContext<TBody>();
+    const rowsModel = table.getRowModel().rows;
+    const hasRows = Array.isArray(rowsModel) && rowsModel.length > 0;
 
     return (
         <tbody>
-            {table.getRowModel().rows.length > 0 ?
+            {hasRows ?
                 (
-                    table.getRowModel().rows.map(row => (
+                    rowsModel.map(row => (
                         <tr key={row.id}>
                             {row.getVisibleCells().map(cell => (
                                 <td key={cell.id}>
@@ -25,7 +32,7 @@ export default function DataTableBody() {
                     /* Empty State Block */
                     <tr>
                         <td colSpan={table.getVisibleFlatColumns().length}>
-                            No data available.
+                            {emptyMessage}
                         </td>
                     </tr>
                 )

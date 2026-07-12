@@ -29,7 +29,7 @@ function App() {
             columns={EMPLOYEE_COLUMNS}
 
             //loading={loading}
-
+            emptyMessage="No hay empleados."
             pagination={paginationInfo}
             onPaginationChange={(state) => {
                 setPagination(

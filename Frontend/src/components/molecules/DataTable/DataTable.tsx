@@ -15,6 +15,7 @@ interface Props<TData> {
 
     toolbar?: React.ReactNode;
     footer?: React.ReactNode;
+    emptyMessage?: React.ReactNode;
 }
 
 export default function DataTable<TData>({
@@ -22,9 +23,10 @@ export default function DataTable<TData>({
     columns,
     pagination,
     onPaginationChange,
-    
+
     toolbar,
     footer,
+    emptyMessage = 'No data available.',
 }: Props<TData>) {
 
     return (
@@ -46,7 +48,7 @@ export default function DataTable<TData>({
                 {/* TABLE CORE */}
                 <table>
                     <DataTableHeader />
-                    <DataTableBody />
+                    <DataTableBody emptyMessage={emptyMessage} />
                 </table>
 
                 {/* PAGINATION */}
