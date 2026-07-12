@@ -1,67 +1,41 @@
 import { useState } from 'react';
-
 import DataTable from '@components/molecules/DataTable';
-
 import { EMPLOYEE_COLUMNS } from '@constants/columns/employee.columns';
-
 import { useEmployees } from '@hooks/useEmployees';
-
-import { toServerPagination } from '@components/molecules/DataTable/utils/pagination-adapter';
-
-import type { ServerPaginationState } from '@typings/pagination';
+import type { PaginationRequest } from '@typings/pagination';
 
 function App() {
-
-    const [pagination, setPagination] =
-        useState<ServerPaginationState>({
-            page: 1,
-            pageSize: 10,
-        });
+    const [pagination, setPagination] = useState<PaginationRequest>({
+        page: 1,
+        pageSize: 10,
+    });
+    const [filters, setFilters] = useState({
+        search: '',
+    });
 
     const {
-
         employees,
-
-        pagination: paginationInfo,
-
-        loading,
-
+        pagination: PaginationResponse,
+        // loading,
     } = useEmployees({
-
         pagination,
-
-        filters: {
-
-            search: '',
-
-        },
-
+        filters: filters,
     });
 
     return (
-
         <DataTable
-
             data={employees}
-
             columns={EMPLOYEE_COLUMNS}
 
-            loading={loading}
-
-            pagination={paginationInfo}
-
-            onPaginationChange={(state) => {
-
-                setPagination(
-                    toServerPagination(state),
-                );
-
+            //loading={loading}
+            emptyMessage="No hay empleados."
+            pagination={PaginationResponse}
+            onPaginationChange={(pagination) => {
+                // FIX: Se debe pasar el objeto de estado de la tabla
+                setPagination(pagination);
             }}
-
         />
-
     );
-
 }
 
 export default App;

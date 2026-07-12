@@ -1,7 +1,7 @@
 import { flexRender } from '@tanstack/react-table';
-import { useDataTableContext } from './provider/DataTableProvider';
+import { useDataTableContext } from '../provider';
 
-export default function DataTableHeader() {
+export default function Header() {
 
     const { table } = useDataTableContext();
 
