@@ -23,6 +23,7 @@ import { toTablePagination, toServerPagination } from '../utils/pagination-adapt
 
 interface DataTableContextValue<TData> {
     table: ReturnType<typeof useReactTable<TData>>;
+    loading: boolean;
 }
 
 const DataTableContext = createContext<DataTableContextValue<any> | null>(null);
@@ -40,6 +41,7 @@ export function useDataTableContext<TData>() {
 interface DataTableProviderProps<TData> {
     data: TData[];
     columns: ColumnDef<TData>[];
+    loading: boolean;
 
     pagination: PaginationMetadata;
     onPaginationChange: (pagination: PaginationRequest) => void;
@@ -51,6 +53,7 @@ export function DataTableProvider<TData>({
     data,
     columns,
     pagination,
+    loading,
     onPaginationChange,
     children,
 }: DataTableProviderProps<TData>) {
@@ -100,7 +103,8 @@ export function DataTableProvider<TData>({
 
     const value = useMemo(() => ({
         table,
-    }), [table]);
+        loading,
+    }), [table, loading]);
 
     return (
         <DataTableContext.Provider value={value}>

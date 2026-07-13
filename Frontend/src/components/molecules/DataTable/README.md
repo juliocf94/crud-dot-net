@@ -1,32 +1,29 @@
-src/
+DataTable/
 
 components/
 
-    DataTable/
-
-        DataTable.tsx
-        DataTableToolbar.tsx
-        DataTablePagination.tsx
-        DataTableEmpty.tsx
-        DataTableLoading.tsx
+    Body.tsx
+    Header.tsx
+    DataTableEmpty.tsx
+    Loading.tsx
+    Pagination.tsx
+    Toolbar.tsx
 
 hooks/
 
+    index.ts
     useEmployees.ts
 
-services/
+provider/
 
-    employee.service.ts
+    index.ts
+    DataTableProvider.tsx
 
-types/
+utils/
+    pagination-adapter.ts
 
-    api-response.ts
-    pagination.ts
-
-constants/
-
-    columns/
-
-        employee.columns.tsx
-        department.columns.tsx
-        product.columns.tsx
+DataTable.tsx
+defaults.ts
+index.ts
+README.md
+types.ts

@@ -16,7 +16,7 @@ function App() {
     const {
         employees,
         pagination: PaginationResponse,
-        // loading,
+        loading,
     } = useEmployees({
         pagination,
         filters: filters,
@@ -27,7 +27,7 @@ function App() {
             data={employees}
             columns={EMPLOYEE_COLUMNS}
 
-            //loading={loading}
+            loading={loading}
             emptyMessage="No hay empleados."
             pagination={PaginationResponse}
             onPaginationChange={(pagination) => {

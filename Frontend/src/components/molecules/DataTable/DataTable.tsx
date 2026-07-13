@@ -12,6 +12,7 @@ import type { PaginationRequest, PaginationMetadata } from '@typings/pagination'
 interface Props<TData> {
     data: TData[];
     columns: ColumnDef<TData>[];
+    loading: boolean;
 
     pagination: PaginationMetadata;
     onPaginationChange: (pagination: PaginationRequest) => void;
@@ -25,6 +26,7 @@ export default function DataTable<TData>({
     data,
     columns,
     pagination,
+    loading,
     onPaginationChange,
 
     toolbar,
@@ -38,6 +40,7 @@ export default function DataTable<TData>({
             columns={columns}
             pagination={pagination}
             onPaginationChange={onPaginationChange}
+            loading={loading}
         >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 

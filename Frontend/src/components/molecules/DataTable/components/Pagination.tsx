@@ -2,7 +2,7 @@ import { DEFAULT_PAGE_SIZES } from '../defaults';
 import { useDataTableContext } from '../provider';
 
 export default function Pagination() {
-    const { table } = useDataTableContext();
+    const { table, loading } = useDataTableContext();
     const {
         pageIndex,
         pageSize,
@@ -20,44 +20,50 @@ export default function Pagination() {
 
             <button
                 onClick={() => table.firstPage()}
-                disabled={!table.getCanPreviousPage()}
+                disabled={
+                    loading ||
+                    !table.getCanPreviousPage()
+                }
             >
                 {'<<'}
             </button>
 
             <button
                 onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
+                disabled={
+                    loading ||
+                    !table.getCanPreviousPage()
+                }
             >
                 {'<'}
             </button>
 
             <span>
-
                 Página{' '}
-
                 <strong>
-
                     {pageIndex + 1}
-
                     {' de '}
-
                     {table.getPageCount()}
-
                 </strong>
 
             </span>
 
             <button
                 onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
+                disabled={
+                    loading ||
+                    !table.getCanNextPage()
+                }
             >
                 {'>'}
             </button>
 
             <button
                 onClick={() => table.lastPage()}
-                disabled={!table.getCanNextPage()}
+                disabled={
+                    loading ||
+                    !table.getCanNextPage()
+                }
             >
                 {'>>'}
             </button>
@@ -73,10 +79,9 @@ export default function Pagination() {
                     );
 
                 }}
+                disabled={loading}
             >
-
                 {DEFAULT_PAGE_SIZES.map(size => (
-
                     <option
                         key={size}
                         value={size}
@@ -85,7 +90,6 @@ export default function Pagination() {
                     </option>
 
                 ))}
-
             </select>
         </div>
     );
