@@ -101,6 +101,7 @@ public class EmployeeService : IEmployeeService
     {
         var employee = new Employee
         {
+            CodeEmployee = dto.CodeEmployee,
             NameEmployee = dto.NameEmployee,
             LastNameEmployee = dto.LastNameEmployee,
             Birthdate = dto.Birthdate
@@ -113,6 +114,7 @@ public class EmployeeService : IEmployeeService
         return new EmployeeResponseDto
         {
             IdEmployee = employee.IdEmployee,
+            CodeEmployee = employee.CodeEmployee,
             NameEmployee = employee.NameEmployee,
             LastNameEmployee = employee.LastNameEmployee,
             Birthdate = employee.Birthdate,

@@ -3,6 +3,8 @@ namespace Backend.DTOs;
 public class EmployeeResponseDto
 {
     public int IdEmployee { get; set; }
+    
+    public long CodeEmployee { get; set; }
 
     public string NameEmployee { get; set; } = string.Empty;
 
