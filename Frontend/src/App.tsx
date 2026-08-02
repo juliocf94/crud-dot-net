@@ -1,13 +1,22 @@
 import { useState } from 'react';
-import DataTable from '@components/molecules/DataTable';
+import DataTable, { loadPersistedTableState } from '@components/molecules/DataTable';
 import { EMPLOYEE_COLUMNS } from '@constants/columns/employee.columns';
 import { useEmployees } from '@hooks/useEmployees';
 import type { PaginationRequest } from '@typings/pagination';
 
+const EMPLOYEES_TABLE_ID = 'employees';
+
 function App() {
-    const [pagination, setPagination] = useState<PaginationRequest>({
-        page: 1,
-        pageSize: 10,
+    // Restaurar antes del primer request: sembramos el estado inicial de
+    // paginación desde el mismo almacenamiento que usará la DataTable, para
+    // que `useEmployees` nunca dispare un request con la página 1 por defecto.
+    const [pagination, setPagination] = useState<PaginationRequest>(() => {
+        const restored = loadPersistedTableState(EMPLOYEES_TABLE_ID);
+
+        return restored?.pagination ?? {
+            page: 1,
+            pageSize: 10,
+        };
     });
     const [filters, setFilters] = useState({
         search: '',
@@ -24,6 +33,9 @@ function App() {
 
     return (
         <DataTable
+            tableId={EMPLOYEES_TABLE_ID}
+            persist
+
             data={employees}
             columns={EMPLOYEE_COLUMNS}
 

@@ -1,11 +1,17 @@
 import type {
-    ColumnDef
+    ColumnDef,
+    ColumnOrderState,
+    ColumnSizingState,
+    RowSelectionState,
+    SortingState,
+    VisibilityState,
 } from '@tanstack/react-table';
 import { DataTableProvider } from './provider/DataTableProvider';
 
 import Header from './components/Header';
 import DataTableBody from './components/Body';
 import Pagination from './components/Pagination';
+import ResetStateButton from './components/ResetStateButton';
 
 import type { PaginationRequest, PaginationMetadata } from '@typings/pagination';
 
@@ -20,6 +26,14 @@ interface Props<TData> {
     toolbar?: React.ReactNode;
     footer?: React.ReactNode;
     emptyMessage?: React.ReactNode;
+
+    tableId?: string;
+    persist?: boolean;
+    initialSorting?: SortingState;
+    initialColumnVisibility?: VisibilityState;
+    initialColumnOrder?: ColumnOrderState;
+    initialColumnSizing?: ColumnSizingState;
+    initialRowSelection?: RowSelectionState;
 }
 
 export default function DataTable<TData>({
@@ -32,6 +46,14 @@ export default function DataTable<TData>({
     toolbar,
     footer,
     emptyMessage = 'No data available.',
+
+    tableId,
+    persist = false,
+    initialSorting,
+    initialColumnVisibility,
+    initialColumnOrder,
+    initialColumnSizing,
+    initialRowSelection,
 }: Props<TData>) {
 
     return (
@@ -41,6 +63,14 @@ export default function DataTable<TData>({
             pagination={pagination}
             onPaginationChange={onPaginationChange}
             loading={loading}
+
+            tableId={tableId}
+            persist={persist}
+            initialSorting={initialSorting}
+            initialColumnVisibility={initialColumnVisibility}
+            initialColumnOrder={initialColumnOrder}
+            initialColumnSizing={initialColumnSizing}
+            initialRowSelection={initialRowSelection}
         >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
 
@@ -49,6 +79,10 @@ export default function DataTable<TData>({
                     <div>
                         {toolbar}
                     </div>
+                )}
+
+                {persist && (
+                    <ResetStateButton />
                 )}
 
                 {/* TABLE CORE */}
